@@ -3,6 +3,7 @@ import * as core from "@actions/core";
 import { System, OS } from "./os";
 
 const VERSIONS_LIST: [string, OS[]][] = [
+  ["5.5-dev", [OS.MacOS, OS.Ubuntu]],
   ["5.4", [OS.MacOS, OS.Ubuntu]],
   ["5.3.3", [OS.MacOS, OS.Ubuntu]],
   ["5.3.2", [OS.MacOS, OS.Ubuntu]],
@@ -65,16 +66,21 @@ export function swiftPackage(version: string, system: System): Package {
   let platform: string;
   let archiveFile: string;
   let archiveName: string;
-
+  let isDev = version === "5.5-dev" ? "DEVELOPMENT-SNAPSHOT-2021-07-19-a" : null;
+  
+  if (version === "5.5-dev") {
+    version = "5.5";
+  }
+  
   switch (system.os) {
     case OS.MacOS:
       platform = "xcode";
-      archiveName = `swift-${version}-RELEASE-osx`;
+      archiveName = `swift-${version}-${isDev ?? "RELEASE"}-osx`;
       archiveFile = `${archiveName}.pkg`;
       break;
     case OS.Ubuntu:
       platform = `ubuntu${system.version.replace(/\D/g, "")}`;
-      archiveName = `swift-${version}-RELEASE-ubuntu${system.version}`;
+      archiveName = `swift-${version}-${isDev ?? "RELEASE"}-ubuntu${system.version}`;
       archiveFile = `${archiveName}.tar.gz`;
       break;
     default:
@@ -82,12 +88,14 @@ export function swiftPackage(version: string, system: System): Package {
   }
 
   return {
-    url: `https://swift.org/builds/swift-${version}-release/${platform}/swift-${version}-RELEASE/${archiveFile}`,
+    url: `https://swift.org/builds/swift-${version}-${isDev ? "branch" : "release"}/${platform}/swift-${version}-${isDev ?? "RELEASE"}/${archiveFile}`,
     name: archiveName,
   };
 }
 
 export function verify(version: string, system: System) {
+  if (version.endsWith("-dev")) return version;
+  
   let range = semver.validRange(version);
   if (range === null) {
     throw new Error("Version must be a valid semver format.");
