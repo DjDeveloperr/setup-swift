@@ -66,12 +66,13 @@ export function swiftPackage(version: string, system: System): Package {
   let platform: string;
   let archiveFile: string;
   let archiveName: string;
-  let isDev = version === "5.5-dev" ? "DEVELOPMENT-SNAPSHOT-2021-07-19-a" : null;
-  
+  let isDev =
+    version === "5.5-dev" ? "DEVELOPMENT-SNAPSHOT-2021-07-19-a" : null;
+
   if (version === "5.5-dev") {
     version = "5.5";
   }
-  
+
   switch (system.os) {
     case OS.MacOS:
       platform = "xcode";
@@ -80,7 +81,9 @@ export function swiftPackage(version: string, system: System): Package {
       break;
     case OS.Ubuntu:
       platform = `ubuntu${system.version.replace(/\D/g, "")}`;
-      archiveName = `swift-${version}-${isDev ?? "RELEASE"}-ubuntu${system.version}`;
+      archiveName = `swift-${version}-${isDev ?? "RELEASE"}-ubuntu${
+        system.version
+      }`;
       archiveFile = `${archiveName}.tar.gz`;
       break;
     default:
@@ -88,14 +91,16 @@ export function swiftPackage(version: string, system: System): Package {
   }
 
   return {
-    url: `https://swift.org/builds/swift-${version}-${isDev ? "branch" : "release"}/${platform}/swift-${version}-${isDev ?? "RELEASE"}/${archiveFile}`,
+    url: `https://swift.org/builds/swift-${version}-${
+      isDev ? "branch" : "release"
+    }/${platform}/swift-${version}-${isDev ?? "RELEASE"}/${archiveFile}`,
     name: archiveName,
   };
 }
 
 export function verify(version: string, system: System) {
   if (version.endsWith("-dev")) return version;
-  
+
   let range = semver.validRange(version);
   if (range === null) {
     throw new Error("Version must be a valid semver format.");
