@@ -67,7 +67,7 @@ export function swiftPackage(version: string, system: System): Package {
   let archiveFile: string;
   let archiveName: string;
   let isDev =
-    version === "5.5-dev" ? "DEVELOPMENT-SNAPSHOT-2021-07-19-a" : null;
+    version === "5.5-dev" ? "DEVELOPMENT-SNAPSHOT-2021-07-23-a" : null;
 
   if (version === "5.5-dev") {
     version = "5.5";

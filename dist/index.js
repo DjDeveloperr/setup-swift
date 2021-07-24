@@ -7901,7 +7901,7 @@ function swiftPackage(version, system) {
     let platform;
     let archiveFile;
     let archiveName;
-    let isDev = version === "5.5-dev" ? "DEVELOPMENT-SNAPSHOT-2021-07-19-a" : null;
+    let isDev = version === "5.5-dev" ? "DEVELOPMENT-SNAPSHOT-2021-07-23-a" : null;
     if (version === "5.5-dev") {
         version = "5.5";
     }
